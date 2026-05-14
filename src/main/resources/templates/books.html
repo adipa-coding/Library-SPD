@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Books - Library System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">සිරි පියරතන දහම් පාසල</a>
+        <div class="navbar-links"> <a href="/logout" style="color:#ef4444; font-weight:600;">Logout</a>
+            <a href="/books">Books</a>
+            <a href="/users">Users</a>
+            <a href="/loans/rent">Rent</a>
+            <a href="/loans/return">Return</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1 style="margin: 0;">Book Collection</h1>
+            <a href="/books/add" class="btn btn-primary">+ Add New Book</a>
+        </div>
+
+        <form action="/books" method="get" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+            <input type="text" name="search" th:value="${searchKeyword}" placeholder="Search by Title, ID, or Genre..." style="flex-grow: 1; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem;">
+            <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem;">Search</button>
+            <a href="/books" th:if="${searchKeyword != null}" class="btn" style="background: var(--surface); color: var(--text-main); border: 1px solid var(--border); padding: 0.75rem 2rem; text-decoration: none; border-radius: 6px;">Clear</a>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Book ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="book : ${books}">
+                    <td th:text="${book.bookId}">ID</td>
+                    <td th:text="${book.title}" style="font-weight: 500;">Title</td>
+                    <td th:text="${book.author}">Author</td>
+                    <td th:text="${book.genre}">Genre</td>
+                    <td>
+                        <span th:if="${book.status == 'Available' || book.status == null}" class="badge badge-available">Available</span>
+                        <span th:if="${book.status == 'Rented'}" class="badge badge-warning">Rented</span>
+                        <span th:if="${book.status == 'Overdue-not returned'}" class="badge badge-overdue">Overdue</span>
+                    </td>
+                </tr>
+                <tr th:if="${books.empty}">
+                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No books found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+

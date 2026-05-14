@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="si" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siri Piyarathana Daham Pasala - Library System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="home-body">
+
+    <div class="home-container">
+        <div
+            style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; margin-bottom: 2rem;">
+            <div style="flex-grow: 1; text-align: left;">
+                <h1 class="home-title" style="margin: 0; margin-bottom: 0.5rem; justify-content: flex-start;">සිරි
+                    පියරතන දහම් පාසල</h1>
+                <p style="margin: 0; color: rgba(255, 255, 255, 0.9); font-size: 1.25rem; font-weight: 500;"
+                    th:text="'Welcome back, ' + ${session.librarianName} + '!'"></p>
+            </div>
+            <a href="/logout" class="btn btn-secondary"
+                style="white-space: nowrap; font-size: 0.9rem; padding: 0.5rem 1rem; margin-top: 0.5rem;">Log Out</a>
+        </div>
+
+        <div class="menu-grid">
+            <a href="/books" class="menu-card">
+                <span>View Books</span>
+            </a>
+            <a href="/books/add" class="menu-card">
+                <span>Add Book</span>
+            </a>
+            <a href="/users" class="menu-card">
+                <span>View Users</span>
+            </a>
+            <a href="/users/add" class="menu-card">
+                <span>Add User</span>
+            </a>
+            <a href="/loans/rent" class="menu-card">
+                <span>Rent a Book</span>
+            </a>
+            <a href="/loans/return" class="menu-card">
+                <span>Return a Book</span>
+            </a>
+            <a href="/analytics" class="menu-card"
+                style="grid-column: 1 / -1; background: linear-gradient(135deg, #ea580c, #c2410c);">
+                <span>Library Analytics</span>
+            </a>
+        </div>
+    </div>
+
+</body>
+
+</html>

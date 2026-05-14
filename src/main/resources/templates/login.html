@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Librarian Login - සිරි පියරතන දහම් පාසල</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--bg-color);
+        }
+        .login-card {
+            background: var(--surface);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-card h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .login-card p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h1>Welcome Back</h1>
+        <p>Enter your Librarian name to continue.</p>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group" style="text-align: left;">
+                <label for="name" class="form-label">Librarian Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="e.g. your name" required autofocus>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
+        </form>
+    </div>
+</body>
+</html>

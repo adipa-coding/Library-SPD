@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile - Library System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .grid-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+        .info-item { margin-bottom: 1rem; }
+        .info-label { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .info-value { font-size: 1.1rem; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">සිරි පියරතන දහම් පාසල</a>
+        <div class="navbar-links"> <a href="/logout" style="color:#ef4444; font-weight:600;">Logout</a>
+            <a href="/books">Books</a>
+            <a href="/users">Users</a>
+            <a href="/loans/rent">Rent</a>
+            <a href="/loans/return">Return</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        
+        <div th:if="${!unpaid.empty}" class="alert alert-danger" style="display:flex; justify-content:space-between; align-items:center;">
+            <span><strong>Warning:</strong> The student has unpaid library fines. They cannot rent new books until cleared.</span>
+        </div>
+
+        <div class="grid-layout">
+            <div class="card">
+                <h2 style="border-bottom: 1px solid var(--border); padding-bottom: 1rem;">Profile Info</h2>
+                
+                <div class="info-item" style="margin-top: 1.5rem;">
+                    <div class="info-label">User ID</div>
+                    <div class="info-value" th:text="${user.userId}" style="color: var(--primary);">ID</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Name</div>
+                    <div class="info-value" th:text="${user.name}">Name</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Grade</div>
+                    <div class="info-value" th:text="${user.grade}">Grade</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Student Phone</div>
+                    <div class="info-value" th:text="${user.phoneNumber}">N/A</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Guardian Phone</div>
+                    <div class="info-value" th:text="${user.guardianPhoneNumber}">N/A</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Home Address</div>
+                    <div class="info-value" th:text="${user.address}">N/A</div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem;">
+                    <a th:href="@{'/loans/rent?userId=' + ${user.userId}}" class="btn btn-primary" style="width: 100%; text-align: center;">Rent New Book for User</a>
+                    <a th:href="@{'/users/' + ${user.userId} + '/edit'}" class="btn" style="width: 100%; background: var(--surface); color: var(--text-main); border: 2px solid var(--border); text-align: center; text-decoration: none; border-radius: 6px; padding: 0.75rem 1.5rem; font-weight: 600; transition: border-color 0.2s;">Edit Student Profile</a>
+                </div>
+            </div>
+
+            <div>
+                <!-- Unpaid Loans Section -->
+                <div class="card" th:if="${!unpaid.empty}" style="border: 2px solid var(--danger);">
+                    <h2 style="color: var(--danger);">Unpaid Loans</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Book ID</th>
+                                <th>Fine Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="loan : ${unpaid}">
+                                <td th:text="${loan.book.title} + ' (' + ${loan.book.bookId} + ')'">Book</td>
+                                <td style="color: var(--danger); font-weight: 700; font-size: 1.1rem;">LKR <span th:text="${loan.overdueFee}"></span></td>
+                                <td>
+                                    <form th:action="@{/loans/pay}" method="post">
+                                        <input type="hidden" name="loanId" th:value="${loan.loanId}">
+                                        <input type="hidden" name="userId" th:value="${user.userId}">
+                                        <button type="submit" class="btn btn-success" style="padding: 0.5rem 1rem;">Clear Fee</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Currently Rented Books -->
+                <div class="card">
+                    <h2>Currently Rented Books</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>Expected Return</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="loan : ${loans}">
+                                <td>
+                                    <div th:text="${loan.book.title}" style="font-weight: 600;"></div>
+                                    <small th:text="'ID: ' + ${loan.book.bookId}" style="color: var(--text-muted);"></small>
+                                </td>
+                                <td th:text="${#temporals.format(loan.expectedReturnDate, 'dd-MM-yyyy')}">Date</td>
+                                <td><span class="badge badge-rented badge" style="background: #DBEAFE; color: #1E40AF;">RENTED</span></td>
+                                <td>
+                                    <form th:action="@{/loans/return}" method="post">
+                                        <input type="hidden" name="loanId" th:value="${loan.loanId}">
+                                        <input type="hidden" name="userId" th:value="${user.userId}">
+                                        <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Return Book</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr th:if="${loans.empty}">
+                                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No active rentals for this student.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Rent History -->
+                <div class="card" style="margin-top: 1.5rem;">
+                    <h2>Rent History</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>Rent Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="loan : ${rentHistory}">
+                                <td>
+                                    <div th:text="${loan.book.title}" style="font-weight: 600;"></div>
+                                    <small th:text="'ID: ' + ${loan.book.bookId}" style="color: var(--text-muted);"></small>
+                                </td>
+                                <td th:text="${#temporals.format(loan.rentDate, 'dd-MM-yyyy')}">Rent Date</td>
+                                <td th:text="${loan.actualReturnDate != null ? #temporals.format(loan.actualReturnDate, 'dd-MM-yyyy') : 'Not Returned'}">Return Date</td>
+                                <td>
+                                    <span th:if="${loan.status == 'DONE'}" class="badge badge-done">Cleared</span>
+                                    <span th:if="${loan.status == 'RETURNED_UNPAID'}" class="badge badge-unpaid">Unpaid</span>
+                                    <span th:if="${loan.status == 'RENTED' || loan.status == 'OVERDUE'}" class="badge badge-rented">Rented</span>
+                                </td>
+                            </tr>
+                            <tr th:if="${rentHistory.empty}">
+                                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No rent history for this student.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Scripts Removed -->
+        </div>
+    </div>
+</body>
+</html>
+

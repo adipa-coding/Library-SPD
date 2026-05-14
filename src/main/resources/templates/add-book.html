@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book - Library System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">සිරි පියරතන දහම් පාසල</a>
+        <div class="navbar-links"> <a href="/logout" style="color:#ef4444; font-weight:600;">Logout</a>
+            <a href="/books">Books</a>
+            <a href="/users">Users</a>
+            <a href="/loans/rent">Rent</a>
+            <a href="/loans/return">Return</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 600px;">
+        <div class="card">
+            <h1>Add New Book</h1>
+            <form th:action="@{/books/add}" th:object="${book}" method="post">
+                <div class="form-group">
+                    <label for="bookId">Book ID (Physical ID)</label>
+                    <input type="text" id="bookId" th:field="*{bookId}" required placeholder="Ex: 045">
+                    <small style="color: var(--text-muted); display: block; margin-top: 5px;">This ID must match the physical database/sticker on the book.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="title">Book Title</label>
+                    <input type="text" id="title" th:field="*{title}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="author">Author</label>
+                    <input type="text" id="author" th:field="*{author}">
+                </div>
+
+                <div class="form-group">
+                    <label for="genre">Genre / Category</label>
+                    <select id="genre" th:field="*{genre}" required>
+                        <option value="">-- Select Category --</option>
+                        <option value="Religious">Religious</option>
+                        <option value="Translations">Translations</option>
+                        <option value="English">English</option>
+                        <option value="Novels">Novels</option>
+                        <option value="Short Stories">Short Stories</option>
+                        <option value="Child Stories">Child Stories</option>
+                        <option value="Magazine">Magazine</option>
+                        <option value="Biographies">Biographies</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-primary">Save Book</button>
+                    <a href="/books" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+

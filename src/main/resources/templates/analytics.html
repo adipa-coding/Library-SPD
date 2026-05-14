@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Analytics Dashboard - Library System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .chart-container {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #E5E7EB;
+        }
+        .chart-container h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #374151;
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid #F3F4F6;
+            padding-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        canvas {
+            max-width: 100%;
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body style="background: #F9FAFB;">
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">සිරි පියරතන දහම් පාසල</a>
+        <div class="navbar-links"> <a href="/logout" style="color:#ef4444; font-weight:600;">Logout</a>
+            <a href="/books">Books</a>
+            <a href="/users">Users</a>
+            <a href="/loans/rent">Rent</a>
+            <a href="/analytics" style="text-decoration: underline;">Analytics</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: 0.5rem; font-size: 2.5rem; color: #111827;">Library Analytics Dashboard</h1>
+        <p style="text-align: center; color: #6B7280; font-size: 1.1rem;">Live overview of library inventory, student demographics, and loan activity.</p>
+
+        <div class="dashboard-grid">
+            <div class="chart-container">
+                <h2>Books by Genre</h2>
+                <canvas id="genreChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h2>Users by Grade</h2>
+                <canvas id="gradeChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h2>Loan Status Overview</h2>
+                <canvas id="loanChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        // Inject data securely from Spring Model
+        const booksByGenreData = /*[[${booksByGenre}]]*/ {};
+        const usersByGradeData = /*[[${usersByGrade}]]*/ {};
+        const loansByStatusData = /*[[${loansByStatus}]]*/ {};
+
+        // Utility colors
+        const bgColors = [
+            'rgba(79, 70, 229, 0.8)',
+            'rgba(16, 185, 129, 0.8)',
+            'rgba(245, 158, 11, 0.8)',
+            'rgba(239, 68, 68, 0.8)',
+            'rgba(139, 92, 246, 0.8)',
+            'rgba(14, 165, 233, 0.8)',
+            'rgba(236, 72, 153, 0.8)'
+        ];
+
+        // 1. Books by Genre (Pie Chart)
+        if (Object.keys(booksByGenreData).length > 0) {
+            new Chart(document.getElementById('genreChart'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(booksByGenreData),
+                    datasets: [{
+                        data: Object.values(booksByGenreData),
+                        backgroundColor: bgColors,
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        // 2. Users by Grade (Bar Chart)
+        if (Object.keys(usersByGradeData).length > 0) {
+            new Chart(document.getElementById('gradeChart'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(usersByGradeData),
+                    datasets: [{
+                        label: 'Total Students',
+                        data: Object.values(usersByGradeData),
+                        backgroundColor: 'rgba(79, 70, 229, 0.8)',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // 3. Loans by Status (Doughnut Chart)
+        if (Object.keys(loansByStatusData).length > 0) {
+            new Chart(document.getElementById('loanChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(loansByStatusData).map(k => k.replace('_', ' ')),
+                    datasets: [{
+                        data: Object.values(loansByStatusData),
+                        backgroundColor: [
+                            'rgba(245, 158, 11, 0.8)', // RENTED (Amber)
+                            'rgba(16, 185, 129, 0.8)', // DONE (Emerald)
+                            'rgba(239, 68, 68, 0.8)'   // RETURNED UNPAID (Red)
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '60%' }
+            });
+        }
+    </script>
+</body>
+</html>
+

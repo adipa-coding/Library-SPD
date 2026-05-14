@@ -1,0 +1,22 @@
+Day: 29/03/2026
+UserID spdLib002 returned a book on time. <10:04:23>BookID=2
+New book added. <10:17:16>BookID=842,Title=Karl Marx
+UserID spdLib002 rented a book. <10:18:26>BookID=842 return date=12/04/2026
+UserID spdLib001 rented a book. <10:18:48>BookID=842 return date=12/04/2026
+UserID spdLib002 returned a book on time. <10:28:03>BookID=842
+UserID spdLib001 returned a book on time. <10:28:11>BookID=842
+UserID spdLib001 returned a book on time. <10:28:14>BookID=2
+new user registered. <10:38:40>UserID=spdLib003,userName=Adipa Udayanga.
+UserID spdLib003 rented a book. <10:39:24>BookID=842 return date=12/04/2026
+UserID spdLib003 returned a book on time. <10:46:05>BookID=842
+UserID spdLibOvr returned a book past due. <10:55:03>BookID=OVD-01. Fine generated: 20.0
+UserID spdLibOvr paid the loan amount. <10:55:48>setStatus=done.
+UserID spdLibOvr rented a book. <10:56:29>BookID=842 return date=22/03/2026
+UserID spdLibOvr returned a book on time. <10:56:37>BookID=842
+UserID spdLibOvr rented a book. <11:05:27>BookID=842 return date=22/03/2026
+UserID spdLibOvr returned a book on time. <11:05:49>BookID=842
+UserID spdLibBlk paid the loan amount. <11:07:03>setStatus=done.
+[Librarian: Adipa] New book added. <11:30:16>BookID=710,Title=Ape Gama
+[Librarian: Adipa] new user registered. <11:31:07>UserID=spdLib001,userName=Parindya.
+[Librarian: Adipa] new user registered. <11:31:48>UserID=spdLib001,userName=Nimal Perera.
+[Librarian: Adipa] new user registered. <11:44:55>UserID=spdLib004,userName=Shavindya Mandakini.

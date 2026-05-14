@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Users - Library System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">සිරි පියරතන දහම් පාසල</a>
+        <div class="navbar-links"> <a href="/logout" style="color:#ef4444; font-weight:600;">Logout</a>
+            <a href="/books">Books</a>
+            <a href="/users">Users</a>
+            <a href="/loans/rent">Rent</a>
+            <a href="/loans/return">Return</a>
+            <a href="/analytics">Analytics</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1 style="margin: 0;">Registered Students</h1>
+            <a href="/users/add" class="btn btn-primary">+ Add New User</a>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Grade</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.userId}" style="font-weight: 600; color: var(--primary);">ID</td>
+                    <td th:text="${user.name}" style="font-weight: 500;">Name</td>
+                    <td th:text="${user.grade}">Grade</td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a th:href="@{'/users/' + ${user.userId}}" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.9rem;">View Profile</a>
+                            <a th:href="@{'/users/' + ${user.userId} + '/edit'}" class="btn" style="padding: 0.4rem 1rem; font-size: 0.9rem; background: var(--surface); border: 1px solid var(--border); color: var(--text-main); text-decoration: none; border-radius: 4px;">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${users.empty}">
+                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No users found. Register one to get started.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
