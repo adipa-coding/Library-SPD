@@ -33,3 +33,8 @@ build/
 .vscode/
 ### log folder###
 logs
+
+# JVM crash/error logs
+hs_err_pid*.log
+replay_pid*.log
+
